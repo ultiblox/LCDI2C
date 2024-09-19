@@ -1,13 +1,13 @@
 // Based on the work by DFRobot
 
-#include "LiquidCrystal_I2C_Hangul.h"
+#include "LCDI2C.h"
 #include <inttypes.h>
 #if defined(ARDUINO) && ARDUINO >= 100
 
 #include "Arduino.h"
 
 #define printIIC(args)	Wire.write(args)
-inline size_t LiquidCrystal_I2C_Hangul::write(uint8_t value) {
+inline size_t LCDI2C::write(uint8_t value) {
 	send(value, Rs);
 	return 1;
 }
@@ -16,7 +16,7 @@ inline size_t LiquidCrystal_I2C_Hangul::write(uint8_t value) {
 #include "WProgram.h"
 
 #define printIIC(args)	Wire.send(args)
-inline void LiquidCrystal_I2C_Hangul::write(uint8_t value) {
+inline void LCDI2C::write(uint8_t value) {
 	send(value, Rs);
 }
 
@@ -44,7 +44,7 @@ inline void LiquidCrystal_I2C_Hangul::write(uint8_t value) {
 // can't assume that its in that state when a sketch starts (and the
 // LiquidCrystal constructor is called).
 
-LiquidCrystal_I2C_Hangul::LiquidCrystal_I2C_Hangul(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows)
+LCDI2C::LCDI2C(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows)
 {
   _Addr = lcd_Addr;
   _cols = lcd_cols;
@@ -52,18 +52,18 @@ LiquidCrystal_I2C_Hangul::LiquidCrystal_I2C_Hangul(uint8_t lcd_Addr,uint8_t lcd_
   _backlightval = LCD_NOBACKLIGHT;
 }
 
-void LiquidCrystal_I2C_Hangul::init(){
+void LCDI2C::init(){
 	init_priv();
 }
 
-void LiquidCrystal_I2C_Hangul::init_priv()
+void LCDI2C::init_priv()
 {
 	Wire.begin();
 	_displayfunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
 	begin(_cols, _rows);  
 }
 
-void LiquidCrystal_I2C_Hangul::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
+void LCDI2C::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
 	if (lines > 1) {
 		_displayfunction |= LCD_2LINE;
 	}
@@ -124,17 +124,17 @@ void LiquidCrystal_I2C_Hangul::begin(uint8_t cols, uint8_t lines, uint8_t dotsiz
 }
 
 /********** high level commands, for the user! */
-void LiquidCrystal_I2C_Hangul::clear(){
+void LCDI2C::clear(){
 	command(LCD_CLEARDISPLAY);// clear display, set cursor position to zero
 	delayMicroseconds(2000);  // this command takes a long time!
 }
 
-void LiquidCrystal_I2C_Hangul::home(){
+void LCDI2C::home(){
 	command(LCD_RETURNHOME);  // set cursor position to zero
 	delayMicroseconds(2000);  // this command takes a long time!
 }
 
-void LiquidCrystal_I2C_Hangul::setCursor(uint8_t col, uint8_t row){
+void LCDI2C::setCursor(uint8_t col, uint8_t row){
 	int row_offsets[] = { 0x00, 0x40, 0x14, 0x54 };
 	if ( row > _numlines ) {
 		row = _numlines-1;    // we count rows starting w/0
@@ -143,70 +143,70 @@ void LiquidCrystal_I2C_Hangul::setCursor(uint8_t col, uint8_t row){
 }
 
 // Turn the display on/off (quickly)
-void LiquidCrystal_I2C_Hangul::noDisplay() {
+void LCDI2C::noDisplay() {
 	_displaycontrol &= ~LCD_DISPLAYON;
 	command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
-void LiquidCrystal_I2C_Hangul::display() {
+void LCDI2C::display() {
 	_displaycontrol |= LCD_DISPLAYON;
 	command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
 
 // Turns the underline cursor on/off
-void LiquidCrystal_I2C_Hangul::noCursor() {
+void LCDI2C::noCursor() {
 	_displaycontrol &= ~LCD_CURSORON;
 	command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
-void LiquidCrystal_I2C_Hangul::cursor() {
+void LCDI2C::cursor() {
 	_displaycontrol |= LCD_CURSORON;
 	command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
 
 // Turn on and off the blinking cursor
-void LiquidCrystal_I2C_Hangul::noBlink() {
+void LCDI2C::noBlink() {
 	_displaycontrol &= ~LCD_BLINKON;
 	command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
-void LiquidCrystal_I2C_Hangul::blink() {
+void LCDI2C::blink() {
 	_displaycontrol |= LCD_BLINKON;
 	command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
 
 // These commands scroll the display without changing the RAM
-void LiquidCrystal_I2C_Hangul::scrollDisplayLeft(void) {
+void LCDI2C::scrollDisplayLeft(void) {
 	command(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVELEFT);
 }
-void LiquidCrystal_I2C_Hangul::scrollDisplayRight(void) {
+void LCDI2C::scrollDisplayRight(void) {
 	command(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVERIGHT);
 }
 
 // This is for text that flows Left to Right
-void LiquidCrystal_I2C_Hangul::leftToRight(void) {
+void LCDI2C::leftToRight(void) {
 	_displaymode |= LCD_ENTRYLEFT;
 	command(LCD_ENTRYMODESET | _displaymode);
 }
 
 // This is for text that flows Right to Left
-void LiquidCrystal_I2C_Hangul::rightToLeft(void) {
+void LCDI2C::rightToLeft(void) {
 	_displaymode &= ~LCD_ENTRYLEFT;
 	command(LCD_ENTRYMODESET | _displaymode);
 }
 
 // This will 'right justify' text from the cursor
-void LiquidCrystal_I2C_Hangul::autoscroll(void) {
+void LCDI2C::autoscroll(void) {
 	_displaymode |= LCD_ENTRYSHIFTINCREMENT;
 	command(LCD_ENTRYMODESET | _displaymode);
 }
 
 // This will 'left justify' text from the cursor
-void LiquidCrystal_I2C_Hangul::noAutoscroll(void) {
+void LCDI2C::noAutoscroll(void) {
 	_displaymode &= ~LCD_ENTRYSHIFTINCREMENT;
 	command(LCD_ENTRYMODESET | _displaymode);
 }
 
 // Allows us to fill the first 8 CGRAM locations
 // with custom characters
-void LiquidCrystal_I2C_Hangul::createChar(uint8_t location, uint8_t charmap[]) {
+void LCDI2C::createChar(uint8_t location, uint8_t charmap[]) {
 	location &= 0x7; // we only have 8 locations 0-7
 	command(LCD_SETCGRAMADDR | (location << 3));
 	for (int i=0; i<8; i++) {
@@ -215,12 +215,12 @@ void LiquidCrystal_I2C_Hangul::createChar(uint8_t location, uint8_t charmap[]) {
 }
 
 // Turn the (optional) backlight off/on
-void LiquidCrystal_I2C_Hangul::noBacklight(void) {
+void LCDI2C::noBacklight(void) {
 	_backlightval=LCD_NOBACKLIGHT;
 	expanderWrite(0);
 }
 
-void LiquidCrystal_I2C_Hangul::backlight(void) {
+void LCDI2C::backlight(void) {
 	_backlightval=LCD_BACKLIGHT;
 	expanderWrite(0);
 }
@@ -229,7 +229,7 @@ void LiquidCrystal_I2C_Hangul::backlight(void) {
 
 /*********** mid level commands, for sending data/cmds */
 
-inline void LiquidCrystal_I2C_Hangul::command(uint8_t value) {
+inline void LCDI2C::command(uint8_t value) {
 	send(value, 0);
 }
 
@@ -237,25 +237,25 @@ inline void LiquidCrystal_I2C_Hangul::command(uint8_t value) {
 /************ low level data pushing commands **********/
 
 // write either command or data
-void LiquidCrystal_I2C_Hangul::send(uint8_t value, uint8_t mode) {
+void LCDI2C::send(uint8_t value, uint8_t mode) {
 	uint8_t highnib=value&0xf0;
 	uint8_t lownib=(value<<4)&0xf0;
        write4bits((highnib)|mode);
 	write4bits((lownib)|mode); 
 }
 
-void LiquidCrystal_I2C_Hangul::write4bits(uint8_t value) {
+void LCDI2C::write4bits(uint8_t value) {
 	expanderWrite(value);
 	pulseEnable(value);
 }
 
-void LiquidCrystal_I2C_Hangul::expanderWrite(uint8_t _data){                                        
+void LCDI2C::expanderWrite(uint8_t _data){                                        
 	Wire.beginTransmission(_Addr);
 	printIIC((int)(_data) | _backlightval);
 	Wire.endTransmission();   
 }
 
-void LiquidCrystal_I2C_Hangul::pulseEnable(uint8_t _data){
+void LCDI2C::pulseEnable(uint8_t _data){
 	expanderWrite(_data | En);	// En high
 	delayMicroseconds(1);		// enable pulse must be >450ns
 	
@@ -266,27 +266,27 @@ void LiquidCrystal_I2C_Hangul::pulseEnable(uint8_t _data){
 
 // Alias functions
 
-void LiquidCrystal_I2C_Hangul::cursor_on(){
+void LCDI2C::cursor_on(){
 	cursor();
 }
 
-void LiquidCrystal_I2C_Hangul::cursor_off(){
+void LCDI2C::cursor_off(){
 	noCursor();
 }
 
-void LiquidCrystal_I2C_Hangul::blink_on(){
+void LCDI2C::blink_on(){
 	blink();
 }
 
-void LiquidCrystal_I2C_Hangul::blink_off(){
+void LCDI2C::blink_off(){
 	noBlink();
 }
 
-void LiquidCrystal_I2C_Hangul::load_custom_character(uint8_t char_num, uint8_t *rows){
+void LCDI2C::load_custom_character(uint8_t char_num, uint8_t *rows){
 		createChar(char_num, rows);
 }
 
-void LiquidCrystal_I2C_Hangul::setBacklight(uint8_t new_val){
+void LCDI2C::setBacklight(uint8_t new_val){
 	if(new_val){
 		backlight();		// turn backlight on
 	}else{
@@ -294,17 +294,17 @@ void LiquidCrystal_I2C_Hangul::setBacklight(uint8_t new_val){
 	}
 }
 
-void LiquidCrystal_I2C_Hangul::printstr(const char c[]){
+void LCDI2C::printstr(const char c[]){
 	//This function is not identical to the function used for "real" I2C displays
 	//it's here so the user sketch doesn't have to be changed 
 	print(c);
 }
 
-void LiquidCrystal_I2C_Hangul::setDelayTime(int t){
+void LCDI2C::setDelayTime(int t){
   delayTime = t;
 }
 
-bool LiquidCrystal_I2C_Hangul::isYi(byte key){ //'ㅣ'형 여부
+bool LCDI2C::isYi(byte key){ //'ㅣ'형 여부
   byte yiIndex[10] = {0,1,2,3,4,5,6,7,20};
   for(byte i=0; i<10; i++){
     if(key == yiIndex[i]){
@@ -313,7 +313,7 @@ bool LiquidCrystal_I2C_Hangul::isYi(byte key){ //'ㅣ'형 여부
   }
   return false;
 }
-bool LiquidCrystal_I2C_Hangul::isU(byte key){ //'ㅡ'형 여부
+bool LCDI2C::isU(byte key){ //'ㅡ'형 여부
   byte uIndex[5] = {8,12,13,17,18};
   for(byte i=0; i<5; i++){
     if(key == uIndex[i]){
@@ -323,7 +323,7 @@ bool LiquidCrystal_I2C_Hangul::isU(byte key){ //'ㅡ'형 여부
   return false;
 }
 
-bool LiquidCrystal_I2C_Hangul::isSSang(byte key){ //'ㅡ'형 여부
+bool LCDI2C::isSSang(byte key){ //'ㅡ'형 여부
   byte ssangIndex[12] = {3,5,6,9,10,11,12,13,14,15,18,20};
   for(byte i=0; i<12; i++){
     if(key == ssangIndex[i]){
@@ -333,7 +333,7 @@ bool LiquidCrystal_I2C_Hangul::isSSang(byte key){ //'ㅡ'형 여부
   return false;
 }
 
-void LiquidCrystal_I2C_Hangul::mergeChoJung(byte* cho, byte* jung, byte* mergedArr){ //합칠 자음(초성), 중성 입력
+void LCDI2C::mergeChoJung(byte* cho, byte* jung, byte* mergedArr){ //합칠 자음(초성), 중성 입력
   for(int i=0; i<8; i++){
     if(i<5){ //초성 범위
       mergedArr[i] = cho[i]; //초성을 저장
@@ -344,7 +344,7 @@ void LiquidCrystal_I2C_Hangul::mergeChoJung(byte* cho, byte* jung, byte* mergedA
 } 
 
 //파싱 함수
-void LiquidCrystal_I2C_Hangul::printHangul(wchar_t* txt, byte startPoint, byte len)
+void LCDI2C::printHangul(wchar_t* txt, byte startPoint, byte len)
 { 
   byte hanCursor = startPoint;
   for(int i=0; i<len; i++){
@@ -356,7 +356,7 @@ void LiquidCrystal_I2C_Hangul::printHangul(wchar_t* txt, byte startPoint, byte l
   }
 }
 
-int LiquidCrystal_I2C_Hangul::printing(byte cho, byte jung, byte jong, byte hanCursor, byte charNum){ //으,이,의,응,잉,읭,읇,읿,읣
+int LCDI2C::printing(byte cho, byte jung, byte jong, byte hanCursor, byte charNum){ //으,이,의,응,잉,읭,읇,읿,읣
   int enrollNum=0;
   int returnNum=2;
   if(charNum%2==0){
@@ -418,14 +418,14 @@ int LiquidCrystal_I2C_Hangul::printing(byte cho, byte jung, byte jong, byte hanC
 }
 
 // unsupported API functions
-void LiquidCrystal_I2C_Hangul::off(){}
-void LiquidCrystal_I2C_Hangul::on(){}
-void LiquidCrystal_I2C_Hangul::setDelay (int cmdDelay,int charDelay) {}
-uint8_t LiquidCrystal_I2C_Hangul::status(){return 0;}
-uint8_t LiquidCrystal_I2C_Hangul::keypad (){return 0;}
-uint8_t LiquidCrystal_I2C_Hangul::init_bargraph(uint8_t graphtype){return 0;}
-void LiquidCrystal_I2C_Hangul::draw_horizontal_graph(uint8_t row, uint8_t column, uint8_t len,  uint8_t pixel_col_end){}
-void LiquidCrystal_I2C_Hangul::draw_vertical_graph(uint8_t row, uint8_t column, uint8_t len,  uint8_t pixel_row_end){}
-void LiquidCrystal_I2C_Hangul::setContrast(uint8_t new_val){}
+void LCDI2C::off(){}
+void LCDI2C::on(){}
+void LCDI2C::setDelay (int cmdDelay,int charDelay) {}
+uint8_t LCDI2C::status(){return 0;}
+uint8_t LCDI2C::keypad (){return 0;}
+uint8_t LCDI2C::init_bargraph(uint8_t graphtype){return 0;}
+void LCDI2C::draw_horizontal_graph(uint8_t row, uint8_t column, uint8_t len,  uint8_t pixel_col_end){}
+void LCDI2C::draw_vertical_graph(uint8_t row, uint8_t column, uint8_t len,  uint8_t pixel_row_end){}
+void LCDI2C::setContrast(uint8_t new_val){}
 
 	

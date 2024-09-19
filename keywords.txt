@@ -1,12 +1,12 @@
 ###########################################
-# Syntax Coloring Map For LiquidCrystal_I2C_Hangul
+# Syntax Coloring Map For LCDI2C
 ###########################################
 
 ###########################################
 # Datatypes (KEYWORD1)
 ###########################################
 
-LiquidCrystal_I2C_Hangul	KEYWORD1
+LCDI2C	KEYWORD1
 
 ###########################################
 # Methods and Functions (KEYWORD2)

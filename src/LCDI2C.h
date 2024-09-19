@@ -1,6 +1,6 @@
 //YWROBOT
-#ifndef LiquidCrystal_I2C_Hangul_h
-#define LiquidCrystal_I2C_Hangul_h
+#ifndef LCDI2C_h
+#define LCDI2C_h
 
 #include <inttypes.h>
 #include "Print.h" 
@@ -54,9 +54,9 @@
 #define Rw B00000010  // Read/Write bit
 #define Rs B00000001  // Register select bit
 
-class LiquidCrystal_I2C_Hangul : public Print {
+class LCDI2C : public Print {
 public:
-    LiquidCrystal_I2C_Hangul(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows);
+    LCDI2C(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows);
     void begin(uint8_t cols, uint8_t rows, uint8_t charsize = LCD_5x8DOTS );
     void clear();
     void home();

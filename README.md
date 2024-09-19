@@ -1,4 +1,4 @@
-# LiquidCrystal_I2C_Hangul : LCD 한글 출력 라이브러리
+# LCDI2C : LCD 한글 출력 라이브러리
 
 ## Introduction
 
@@ -8,14 +8,14 @@
  
 ## Getting started
 ### from Arduino Library Manager
- Arduino IDE -> 스케치(Sketch) -> 라이브러리 포함하기(Include Library) -> 라이브러리 관리(Library Manager)에서 'LiquidCrystal_I2C_Hangul'을 검색하여 간편하게 설치할 수 있습니다.
+ Arduino IDE -> 스케치(Sketch) -> 라이브러리 포함하기(Include Library) -> 라이브러리 관리(Library Manager)에서 'LCDI2C'을 검색하여 간편하게 설치할 수 있습니다.
  
 ### from zip file from Github
  현재 Repository에서 Releases 창의 마지막 Release를 다운로드 하여,  Arduino IDE -> 스케치(Sketch) -> 라이브러리 포함하기(Include Library) -> .ZIP 라이브러리 추가 메뉴를 통해 라이브러리를 설치할 수 있습니다.
 
  
 ### Documentation: Standard API
-LiquidCrystal_I2C_Hangul 라이브러리에서는 
+LCDI2C 라이브러리에서는 
 기존 LiquidCrystal_I2C 라이브러리에 포함된 함수들을 지원합니다.
 
 This Library supports the functions in 'LiquidCrystal_I2C' also.
